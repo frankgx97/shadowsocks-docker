@@ -5,7 +5,7 @@ ARG SS_URL=https://github.com/shadowsocks/shadowsocks-libev/releases/download/v$
 
 RUN set -ex  \
     && echo "http://mirrors.ustc.edu.cn/alpine/v3.6/main/" > /etc/apk/repositories \
-    && echo "http://mirrors.ustc.edu.cn/alpine/v3.6/community/" >> /etc/apk/repositories \
+    && echo "http://mirrors.ustc.edu.cn/alpine/v3.6/community/" >> /etc/apk/repositories && \
     apk add --no-cache --virtual .build-deps \
                                 autoconf \
                                 build-base \
@@ -17,7 +17,7 @@ RUN set -ex  \
                                 mbedtls-dev \
                                 pcre-dev \
                                 tar \
-                                c-ares-dev \
+                                c-ares-dev && \
     cd /tmp && \
 
     curl -sSL $SS_URL | tar xz --strip 1 && \
