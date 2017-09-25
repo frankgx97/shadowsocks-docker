@@ -17,11 +17,19 @@ RUN set -ex  \
                                 mbedtls-dev \
                                 pcre-dev \
                                 tar \
+                                openssl-dev libc-dev asciidoc xmlto automake git\
                                 c-ares-dev && \
     cd /tmp && \
 
     curl -sSL $SS_URL | tar xz --strip 1 && \
     ./configure --prefix=/usr --disable-documentation && \
+    make install && \
+
+    git clone https://github.com/shadowsocks/simple-obfs.git && \
+    cd simple-obfs && \
+    git submodule update --init --recursive && \
+    ./autogen.sh && \
+    ./configure && make && \
     make install && \
     cd .. && \
 
