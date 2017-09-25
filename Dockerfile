@@ -39,4 +39,4 @@ USER nobody
 
 EXPOSE 1984
 
-CMD ss-server -c /root/shadowsocks.json
+CMD ss-server -c /tmp/shadowsocks.json
