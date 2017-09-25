@@ -15,7 +15,7 @@ pipeline {
       steps {
         sh '''
         docker login -u=$DOCKER_USERNAME -p=$DOCKER_PASSWORD
-        docker push nyanim/shadowsocks
+        docker push nyanim/shadowsocks:latest
         '''
       }
     }
