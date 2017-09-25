@@ -17,6 +17,13 @@ pipeline {
         docker login -u=$DOCKER_USERNAME -p=$DOCKER_PASSWORD
         docker push nyanim/shadowsocks:latest
         '''
+        sh '''
+        sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no -l frank cat.nyan.im <<EOF 
+        echo $SSH_PASSWORD | sudo -S docker-compose -f /home/frank/dockers/shadowsocks.yml down
+        sudo docker pull nyanim/shadowsocks
+        sudo docker-compose -f /home/frank/dockers/shadowsocks.yml up -d 
+        uname -a
+        '''
       }
     }
     stage('Notification'){
