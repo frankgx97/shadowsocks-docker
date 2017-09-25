@@ -12,26 +12,28 @@ pipeline {
       }
     }
     stage('Deploy') {
-      parallel(
-        "Deploy" : {
-          sh '''
-          docker login -u=$DOCKER_USERNAME -p=$DOCKER_PASSWORD
-          docker push nyanim/shadowsocks:latest
-          '''
-          sh '''
-          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no -l frank cat.nyan.im <<EOF 
-          echo $SSH_PASSWORD | sudo -S docker-compose -f /home/frank/dockers/shadowsocks.yml down
-          sudo docker pull nyanim/shadowsocks
-          sudo docker-compose -f /home/frank/dockers/shadowsocks.yml up -d 
-          uname -a
-          '''
-        },
-        "Cleanup":{
-          sh'''
-          sudo docker images | grep '<none>' | awk '{print $3}' | xargs sudo docker rmi || true
-          '''
-        }
-      )
+      steps{
+        parallel(
+          "Deploy" : {
+            sh '''
+            docker login -u=$DOCKER_USERNAME -p=$DOCKER_PASSWORD
+            docker push nyanim/shadowsocks:latest
+            '''
+            sh '''
+            sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no -l frank cat.nyan.im <<EOF 
+            echo $SSH_PASSWORD | sudo -S docker-compose -f /home/frank/dockers/shadowsocks.yml down
+            sudo docker pull nyanim/shadowsocks
+            sudo docker-compose -f /home/frank/dockers/shadowsocks.yml up -d 
+            uname -a
+            '''
+          },
+          "Cleanup":{
+            sh'''
+            sudo docker images | grep '<none>' | awk '{print $3}' | xargs sudo docker rmi || true
+            '''
+          }
+        )
+      }
     }
     stage('Notification'){
       steps{
