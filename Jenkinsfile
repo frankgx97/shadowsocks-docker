@@ -8,7 +8,7 @@ pipeline {
     }
     stage('Build') {
       steps {
-        sh 'sudo docker build --force-rm -t nyanim/shadowsocks:latest .'
+        sh 'echo $SSH_PASSWORD | sudo -S docker build --force-rm -t nyanim/shadowsocks:latest .'
       }
     }
     stage('Deploy') {
@@ -16,8 +16,8 @@ pipeline {
         parallel(
           "Deploy" : {
             sh '''
-            sudo docker login -u=$DOCKER_USERNAME -p=$DOCKER_PASSWORD
-            sudo docker push nyanim/shadowsocks:latest
+            echo $SSH_PASSWORD | sudo -S docker login -u=$DOCKER_USERNAME -p=$DOCKER_PASSWORD
+            echo $SSH_PASSWORD | sudo -S docker push nyanim/shadowsocks:latest
             '''
             sh '''
             sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no -l frank cat.nyan.im <<EOF 
