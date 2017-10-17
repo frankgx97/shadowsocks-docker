@@ -21,7 +21,7 @@ pipeline {
             '''
             sh '''
             sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no -l frank cat.nyan.im <<EOF 
-            echo $SSH_PASSWORD | sudo -S docker-compose -f /home/frank/dockers/shadowsocks.yml down
+            echo $SSH_PASSWORD | sudo -S docker-compose -f /home/frank/dockers/shadowsocks-cat.yml down
             sudo docker pull nyanim/shadowsocks
             sudo docker-compose -f /home/frank/dockers/shadowsocks.yml up -d 
             uname -a
