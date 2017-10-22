@@ -20,10 +20,10 @@ pipeline {
             sudo docker push nyanim/shadowsocks:latest
             '''
             sh '''
-            sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no -l frank cat.nyan.im <<EOF 
-            echo $SSH_PASSWORD | sudo -S docker-compose -f /home/frank/dockers/shadowsocks-cat.yml down
+            sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no -l $SSH_USER $SSH_HOST <<EOF 
+            echo $SSH_PASSWORD | sudo -S docker-compose -f $SS_COMPOSE_FILE down
             sudo docker pull nyanim/shadowsocks
-            sudo docker-compose -f /home/frank/dockers/shadowsocks-cat.yml up -d 
+            sudo docker-compose -f $SS_COMPOSE_FILE up -d 
             uname -a
             '''
           },
@@ -39,7 +39,7 @@ pipeline {
       steps{
           emailext body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
 
-Check console output at $BUILD_URL to view the results.''', recipientProviders: [[$class: 'DevelopersRecipientProvider']], replyTo: 'i@nyan.im', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', to: 'i@nyan.im'
+Check console output at $BUILD_URL to view the results.''', recipientProviders: [[$class: 'DevelopersRecipientProvider']], replyTo: '$MAIL', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', to: '$MAIL'
 
       }
     }
